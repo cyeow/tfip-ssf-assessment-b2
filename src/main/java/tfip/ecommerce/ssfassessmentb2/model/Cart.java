@@ -27,4 +27,10 @@ public class Cart {
         return "Cart [items=" + items + "]";
     }
 
+    public boolean isEmpty() {
+        if(items == null || items.size() == 0) {
+            return true;
+        }
+        return false;
+    }
 }

@@ -1,7 +1,15 @@
 package tfip.ecommerce.ssfassessmentb2.model;
 
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
+
 public class Item {
+
+    @NotNull(message="You must specify an item")
     private String item;
+
+    @NotNull(message="You must add at least 1 item")
+    @Min(value=1, message="You must add at least 1 item")
     private Integer quantity;
 
     public Item() {
