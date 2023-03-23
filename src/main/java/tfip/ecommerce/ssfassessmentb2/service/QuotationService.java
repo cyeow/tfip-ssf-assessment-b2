@@ -2,6 +2,7 @@ package tfip.ecommerce.ssfassessmentb2.service;
 
 import java.io.StringReader;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
@@ -12,7 +13,9 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import jakarta.json.Json;
+import jakarta.json.JsonArray;
 import jakarta.json.JsonObject;
+import jakarta.json.JsonValue;
 import tfip.ecommerce.ssfassessmentb2.model.Quotation;
 
 @Service
@@ -40,38 +43,26 @@ public class QuotationService {
             throw new Exception(resp.getBody());
         }
 
-        return createFromJSON(resp.getBody());
+        return createFromJSON(resp.getBody(), items);
     }
 
-    private String listToString(List<String> items) {
-        StringBuilder sb = new StringBuilder();
-        sb.append("[");
-        items.forEach(item -> {
-            sb.append("\"");
-            sb.append(item);
-            if(items.indexOf(item) != items.size()-1) {
-                sb.append("\", ");
-            } else {
-                sb.append("\"");
-            }
-        });
-        sb.append("]");
-        
-        return sb.toString();
+    private String listToString(List<String> items) {        
+        return items.stream().map(item -> "\"" + item + "\"").collect(Collectors.joining(", ", "[", "]"));
     }
 
-    private Quotation createFromJSON(String json) {
+    private Quotation createFromJSON(String json, List<String> items) {
 
         JsonObject o = Json.createReader(new StringReader(json)).readObject();
 
         Quotation q = new Quotation();
         q.setQuoteId(o.getString("quoteId"));
         
-        JsonObject quotationsMap = o.getJsonObject("quotations");
-        for (String quote : quotationsMap.keySet()) {
-            System.out.println(quote);
-            q.addQuotation(quote, Float.parseFloat(quotationsMap.get(quote).toString()));
-        }
+        JsonObject qtns = o.getJsonObject("quotations"); 
+        System.out.println(qtns.toString());
+        // for (String quote : quotationsMap.keySet()) {
+        //     System.out.println(quote);
+        //     q.addQuotation(quote, Float.parseFloat(quotationsMap.get(quote).toString()));
+        // }
 
         return q;
     }
