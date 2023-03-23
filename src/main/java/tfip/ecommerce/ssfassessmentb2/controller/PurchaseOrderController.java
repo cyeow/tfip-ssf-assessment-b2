@@ -79,7 +79,7 @@ public class PurchaseOrderController {
         }
 
         Invoice invoice = svc.checkoutCart((Cart) session.getAttribute("cart"), shippingAddress);
-        
+        System.out.println(invoice);
         model.addAttribute("invoice", invoice);
         
         // clear session

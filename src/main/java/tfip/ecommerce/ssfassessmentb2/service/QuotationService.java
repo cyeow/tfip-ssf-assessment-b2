@@ -66,9 +66,10 @@ public class QuotationService {
 
         Quotation q = new Quotation();
         q.setQuoteId(o.getString("quoteId"));
-
+        
         JsonObject quotationsMap = o.getJsonObject("quotations");
         for (String quote : quotationsMap.keySet()) {
+            System.out.println(quote);
             q.addQuotation(quote, Float.parseFloat(quotationsMap.get(quote).toString()));
         }
 
