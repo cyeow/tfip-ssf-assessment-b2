@@ -55,7 +55,6 @@ public class PurchaseOrderController {
         }
 
         svc.addToCart((Cart) session.getAttribute("cart"), item);
-        // does this modify the cart in place? to confirm.
         model.addAttribute("cart", session.getAttribute("cart"));
         model.addAttribute("item", new Item());
         return "view1";
@@ -79,7 +78,6 @@ public class PurchaseOrderController {
         }
 
         Invoice invoice = svc.checkoutCart((Cart) session.getAttribute("cart"), shippingAddress);
-        System.out.println(invoice);
         model.addAttribute("invoice", invoice);
         
         // clear session

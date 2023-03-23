@@ -13,9 +13,7 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import jakarta.json.Json;
-import jakarta.json.JsonArray;
 import jakarta.json.JsonObject;
-import jakarta.json.JsonValue;
 import tfip.ecommerce.ssfassessmentb2.model.Quotation;
 
 @Service
@@ -28,8 +26,8 @@ public class QuotationService {
         String fullPath = UriComponentsBuilder.fromUriString(qSysUrl).path("/quotation").toUriString();
 
         RequestEntity<String> req = RequestEntity.post(fullPath)
-                .header("Accept", MediaType.APPLICATION_JSON_VALUE)
-                .header("Content-Type", MediaType.APPLICATION_JSON_VALUE)
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
                 .body(listToString(items));
 
         System.out.println(req);
@@ -59,10 +57,8 @@ public class QuotationService {
         
         JsonObject qtns = o.getJsonObject("quotations"); 
         System.out.println(qtns.toString());
-        // for (String quote : quotationsMap.keySet()) {
-        //     System.out.println(quote);
-        //     q.addQuotation(quote, Float.parseFloat(quotationsMap.get(quote).toString()));
-        // }
+
+        items.forEach(item -> q.addQuotation(item, (float) qtns.getJsonNumber(item).doubleValue()));
 
         return q;
     }
